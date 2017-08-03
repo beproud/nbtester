@@ -32,7 +32,9 @@ def load_cells(variables, nb_path, cell_indexes=None):
     ]
     for cell in code_cells:
         try:
-            exec(cell['source'], globals(), variables)
+            g = globals()
+            g.update(variables)
+            exec(cell['source'], g, variables)
         except Exception as err:
             raise AssertionError("""
 
