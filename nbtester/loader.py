@@ -28,9 +28,10 @@ def load_cells(variables, nb_path, cell_indexes=None):
     indexes = cell_indexes or range(len(cells))
     code_cells = [
         cell for i, cell in enumerate(cells)
-        if cell['cell_type'] == 'code' and i in indexes
+        if cell['cell_type'] == 'code' and i in indexes and cell['execution_count']
     ]
-    for cell in code_cells:
+    sorted_code_cells = sorted(code_cells, key=lambda x: x['execution_count'])
+    for cell in sorted_code_cells:
         try:
             g = globals()
             g.update(variables)

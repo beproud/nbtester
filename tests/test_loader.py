@@ -21,3 +21,8 @@ class TestLoadCells(unittest.TestCase):
         d = {}
         with self.assertRaises(AssertionError):
             load_cells(d, os.path.join(here, './syntax_error.ipynb'))
+
+    def test_execution_count_in_random_order(self):
+        d = {}
+        load_cells(d, os.path.join(here, './execution_count_in_random_order.ipynb'))
+        self.assertEqual(d, {'a': 'test'})
