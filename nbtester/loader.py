@@ -1,3 +1,5 @@
+import warnings
+
 import nbformat
 
 
@@ -30,10 +32,17 @@ def load_cells(variables, nb_path, cell_indexes=None):
         cell for i, cell in enumerate(cells)
         if cell['cell_type'] == 'code' and i in indexes
     ]
+    g = globals()
+
     for cell in code_cells:
         try:
-            g = globals()
-            g.update(variables)
+            # Ignore "can't resolve package from __spec__ or __package__,
+            # falling back on __name__ and __path__" warning
+            # in importlib/_bootstrap.py
+            warnings.simplefilter(
+                action="ignore",
+                category=ImportWarning
+            )
             exec(cell['source'], g, variables)
         except Exception as err:
             raise AssertionError("""
