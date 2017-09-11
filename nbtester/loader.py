@@ -32,13 +32,13 @@ def load_cells(variables, nb_path, cell_indexes=None):
         cell for i, cell in enumerate(cells)
         if cell['cell_type'] == 'code' and i in indexes
     ]
-    g = globals()
-
     for cell in code_cells:
         try:
             # Ignore "can't resolve package from __spec__ or __package__,
             # falling back on __name__ and __path__" warning
             # in importlib/_bootstrap.py
+            g = globals()
+            g.update(variables)
             warnings.simplefilter(
                 action="ignore",
                 category=ImportWarning
