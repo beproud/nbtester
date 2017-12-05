@@ -22,6 +22,13 @@ class TestLoadCells(unittest.TestCase):
         with self.assertRaises(AssertionError):
             load_cells(d, os.path.join(here, './syntax_error.ipynb'))
 
+    def test_closured_variable(self):
+        d = {}
+        load_cells(d, os.path.join(here, './closured.ipynb'))
+        self.assertEqual(d['a'], "hello")
+        self.assertEqual(d['b'], "hello")
+        self.assertEqual(d['hello'](), "hello")
+
     def test_run_magic_command(self):
         d = {}
         load_cells(d, os.path.join(here, './run_1.ipynb'))

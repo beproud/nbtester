@@ -8,7 +8,7 @@ import nbformat
 MAGIC_COMMAND_RE = re.compile(r'\s*\%\s*(?P<command>\w+)(\s+(?P<args>.+))?')
 
 
-def load_cells(variables, nb_path, cell_indexes=None, g_variables=None):
+def load_cells(variables, nb_path, cell_indexes=None):
     """
     Jupyter Notebook:
 
@@ -37,7 +37,6 @@ def load_cells(variables, nb_path, cell_indexes=None, g_variables=None):
         cell for i, cell in enumerate(cells)
         if cell['cell_type'] == 'code' and i in indexes
     ]
-    g = g_variables or globals()
 
     # Ignore "can't resolve package from __spec__ or __package__,
     # falling back on __name__ and __path__" warning
@@ -58,10 +57,13 @@ def load_cells(variables, nb_path, cell_indexes=None, g_variables=None):
                 # Construct path to child ipynb file
                 p = os.path.join(os.path.dirname(nb_path), args)
                 # Load ipynb files recursively.
-                load_cells(variables, p, g_variables=g)
+                load_cells(variables, p)
         else:
             try:
-                exec(source, g, variables)
+                g = globals()
+                g.update(variables)
+
+                exec(cell['source'], g, variables)
             except Exception as err:
                 raise AssertionError("""
 
