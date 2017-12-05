@@ -21,3 +21,8 @@ class TestLoadCells(unittest.TestCase):
         d = {}
         with self.assertRaises(AssertionError):
             load_cells(d, os.path.join(here, './syntax_error.ipynb'))
+
+    def test_run_magic_command(self):
+        d = {}
+        load_cells(d, os.path.join(here, './run_1.ipynb'))
+        self.assertEqual(d, {'parent': 'PARENT', 'child': 'CHILD'})

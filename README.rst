@@ -34,3 +34,9 @@ Jupyter Notebook File (test.ipynb)::
           d = {}
           load_cells(d, "test.ipynb")
           self.assertEqual(d['num'], 8)
+
+
+Supported Magic Commands
+========================
+
+* ``% run child.ipynb``
