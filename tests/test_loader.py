@@ -29,6 +29,10 @@ class TestLoadCells(unittest.TestCase):
         self.assertEqual(d['b'], "hello")
         self.assertEqual(d['hello'](), "hello")
 
+        self.assertEqual(d['a2'], "hello")
+        self.assertEqual(d['b2'], "hello")
+        self.assertEqual(d['hello2'](), "hello")
+
     def test_run_magic_command(self):
         d = {}
         load_cells(d, os.path.join(here, './run_1.ipynb'))
