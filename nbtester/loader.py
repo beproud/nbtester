@@ -5,7 +5,7 @@ import warnings
 import nbformat
 
 
-MAGIC_COMMAND_RE = re.compile(r'\s*\%\s*(?P<command>\w+)(\s+(?P<args>.+))?')
+MAGIC_COMMAND_RE = re.compile(r'^\%\s*(?P<command>\w+)[ ]*(?P<args>.*)$', re.M)
 
 
 def load_cells(variables, nb_path, cell_indexes=None):
@@ -45,27 +45,19 @@ def load_cells(variables, nb_path, cell_indexes=None):
         action="ignore",
         category=ImportWarning
     )
+    repl = r'if "\g<command>" == "run": load_cells(locals(), "\g<args>")'
     for cell in code_cells:
         source = cell['source']
 
         # Parsing Magic Commands
-        m = MAGIC_COMMAND_RE.search(source)
-        if m:
-            cmd = m.group('command') and m.group('command').strip()
-            args = m.group('args') and m.group('args').strip()
-            if cmd == 'run' and args:
-                # Construct path to child ipynb file
-                p = os.path.join(os.path.dirname(nb_path), args)
-                # Load ipynb files recursively.
-                load_cells(variables, p)
-        else:
-            try:
-                g = globals()
-                g.update(variables)
+        source = MAGIC_COMMAND_RE.sub(repl, source)
+        try:
+            g = globals()
+            g.update(variables)
 
-                exec(cell['source'], g, variables)
-            except Exception as err:
-                raise AssertionError("""
+            exec(source, g, variables)
+        except Exception as err:
+            raise AssertionError("""
 
 {errtype}: {err}
 
