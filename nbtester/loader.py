@@ -45,7 +45,13 @@ def load_cells(variables, nb_path, cell_indexes=None):
         action="ignore",
         category=ImportWarning
     )
-    repl = r'if "\g<command>" == "run": load_cells(locals(), "\g<args>")'
+    def repl(m):
+        command, args = m.groups()
+        if command != 'run':
+            return ''
+        fnam = os.path.join(os.path.dirname(nb_path), args)
+        return 'load_cells(locals(), "%s")' % fnam
+    
     for cell in code_cells:
         source = cell['source']
 
