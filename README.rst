@@ -40,3 +40,4 @@ Supported Magic Commands
 ========================
 
 * ``% run child.ipynb``
+* ``%% ...``
