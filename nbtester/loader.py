@@ -2,6 +2,7 @@ import os
 import re
 import warnings
 
+from IPython import get_ipython
 import nbformat
 
 
@@ -9,7 +10,6 @@ MAGIC_COMMAND_RE = re.compile(r'^\%\s*(?P<command>\w+)[ ]*(?P<args>.*)$', re.M)
 
 
 def do_cell_magic(source):
-    from IPython import get_ipython
     ip = get_ipython()
     ss = source.splitlines()
     mg, ln = (ss[0].split(None, 1) + [''])[:2]
@@ -59,7 +59,7 @@ def load_cells(variables, nb_path, cell_indexes=None):
             return ''
         fnam = os.path.join(os.path.dirname(nb_path), args)
         return 'load_cells(locals(), "%s")' % fnam
-    
+
     for cell in code_cells:
         source = cell['source']
 
