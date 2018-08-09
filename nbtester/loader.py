@@ -8,6 +8,14 @@ import nbformat
 MAGIC_COMMAND_RE = re.compile(r'^\%\s*(?P<command>\w+)[ ]*(?P<args>.*)$', re.M)
 
 
+def do_cell_magic(source):
+    from IPython import get_ipython
+    ip = get_ipython()
+    ss = source.splitlines()
+    mg, ln = (ss[0].split(None, 1) + [''])[:2]
+    ip.run_cell_magic(mg[2:], ln, '\n'.join(ss[1:]))
+
+
 def load_cells(variables, nb_path, cell_indexes=None):
     """
     Jupyter Notebook:
@@ -61,7 +69,10 @@ def load_cells(variables, nb_path, cell_indexes=None):
             g = globals()
             g.update(variables)
 
-            exec(source, g, variables)
+            if source.startswith('%%'):
+                do_cell_magic(source)
+            else:
+                exec(source, g, variables)
         except Exception as err:
             raise AssertionError("""
 
