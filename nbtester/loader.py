@@ -25,7 +25,7 @@ def run_cell(source, variables=None, nb_path=''):
     source = re.sub(r'^!.*$', '', source, flags=re.M)
     try:
         lines = source.splitlines()
-        ptn = r"(from\s+\S+\s+|)import\s+\w+"
+        ptn = r"(from\s+\S+\s+|)import\s+[^(]+$"
         n = len(list(takewhile(lambda x: not x or re.match(ptn, x), lines)))
         for pl in [lines[:n], lines[n:]]:
             g = globals()
