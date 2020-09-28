@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 _plt = plt
 from unittest import mock
-from itertools import dropwhile
+from itertools import dropwhile, takewhile
 
 
 def run_cell(source, variables=None, nb_path=''):
@@ -24,10 +24,15 @@ def run_cell(source, variables=None, nb_path=''):
     source = re.sub(r'^\%\s*(?P<command>\w+)[ ]*(?P<args>.*)$', repl, source, flags=re.M)
     source = re.sub(r'^!.*$', '', source, flags=re.M)
     try:
-        g = globals()
-        if variables:
-            g.update(variables)
-        exec(source, g, variables)
+        lines = source.splitlines()
+        ptn = r"(from\s+\S+\s+|)import\s+\w+"
+        n = len(list(takewhile(lambda x: not x or re.match(ptn, x), lines)))
+        for pl in [lines[:n], lines[n:]]:
+            g = globals()
+            if variables:
+                g.update(variables)
+            exec("\n".join(pl), g, variables)
+
     except Exception as err:
         raise AssertionError("""
 
