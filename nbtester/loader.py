@@ -154,8 +154,9 @@ def matplotlib_test(ipynb, expected=None):
         for a in alst:
             print(f'{a[0]}{str(a[1])[4:]}')
         return False
+    ptn = r'([a-zA-Z_][a-zA-Z0-9_.\[\]]*)\(([^())]*(?:\([^)]*\)[^())]*)*)\)'
     for e in expected.splitlines():
-        m = re.match(r'([a-zA-Z_][a-zA-Z0-9_.\[\]]*)\(([^)]*)\)', e)
+        m = re.match(ptn, e)
         if not m:
             print(f'Error: No function call ({e})', file=sys.stderr)
             return False
