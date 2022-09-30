@@ -2,6 +2,8 @@ import os
 import re
 import sys
 import warnings
+from itertools import dropwhile, takewhile
+from unittest import mock
 
 import matplotlib.pyplot as plt
 import nbformat
@@ -9,8 +11,6 @@ import numpy as np
 from IPython import get_ipython
 
 _plt = plt
-from itertools import dropwhile, takewhile
-from unittest import mock
 
 
 def run_cell(source, variables=None, nb_path="", ip=None):
@@ -33,7 +33,10 @@ def run_cell(source, variables=None, nb_path="", ip=None):
         for pl in [lines[:n], lines[n:]]:
             src = "\n".join(pl)
             if ip:
-                ip.run_cell(src)
+                res = ip.run_cell(src)
+                err = res.error_before_exec or res.error_in_exec
+                if err:
+                    raise err
             else:
                 g = globals()
                 if variables:
@@ -96,7 +99,7 @@ def load_cells(variables, nb_path, cell_indexes=None, use_ipython=False):
 
 
 class MyMagicMock(mock.MagicMock):
-    mocks = []
+    mocks = []  # type: list[MyMagicMock]
     in_matplotlib_test = False
 
     def __init__(self, add=False, *args, **kwargs):
