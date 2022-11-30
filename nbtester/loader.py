@@ -8,8 +8,8 @@ from unittest import mock
 import matplotlib.pyplot as plt
 import nbformat
 import numpy as np
-from pandas.io.formats.style import Styler
 from IPython import get_ipython
+from pandas.io.formats.style import Styler
 
 _plt = plt
 
@@ -35,11 +35,11 @@ def run_cell(source, variables=None, nb_path="", ip=None):
             src = "\n".join(pl)
             if ip:
                 res = ip.run_cell(src)
-                if isinstance(res.result, Styler):
-                    print(res.result.to_html())
                 err = res.error_before_exec or res.error_in_exec
                 if err:
                     raise err
+                if isinstance(res.result, Styler):
+                    print(res.result.to_html())
             else:
                 g = globals()
                 if variables:
