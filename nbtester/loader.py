@@ -35,7 +35,7 @@ def run_cell(source, variables=None, nb_path="", ip=None):
             src = "\n".join(pl)
             if ip:
                 res = ip.run_cell(src)
-                if type(res.result) == Styler:
+                if isinstance(res.result, Styler):
                     print(res.result.to_html())
                 err = res.error_before_exec or res.error_in_exec
                 if err:
