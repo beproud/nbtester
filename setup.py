@@ -7,7 +7,7 @@ README = open(os.path.join(here, "README.rst")).read()
 
 setup(
     name="nbtester",
-    version="0.6.0",
+    version="0.7.0",
     install_requires=["nbformat"],
     packages=["nbtester"],
     author="Hiroki KIYOHARA",

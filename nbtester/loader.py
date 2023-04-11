@@ -178,9 +178,8 @@ def matplotlib_test(ipynb, expected=None, conv_dict=None):
     if MyMagicMock.in_matplotlib_test:
         return False
     MyMagicMock.mocks = []
-    with mock.patch("matplotlib.pyplot", name="plt") as p, mock.patch(
-        "matplotlib.pyplot.subplots", _subplots
-    ):
+    with mock.patch("matplotlib.pyplot", name="plt") as p:
+        p.subplots = _subplots
         MyMagicMock.mocks.append(p)
         try:
             MyMagicMock.in_matplotlib_test = True
