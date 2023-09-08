@@ -7,9 +7,9 @@ README = open(os.path.join(here, "README.rst")).read()
 
 setup(
     name="nbtester",
-    version="0.7.0",
+    version="0.8.0",
     install_requires=["nbformat"],
-    packages=["nbtester"],
+    packages=["nbtester", "nbtester.matplotlib"],
     author="Hiroki KIYOHARA",
     author_email="hirokiky@gmail.com",
     description="Test utilities for Jupyter Notebook file",
